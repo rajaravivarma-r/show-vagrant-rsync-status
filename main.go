@@ -26,16 +26,17 @@ func main() {
     }
   }()
 
-  go func(secondsElapsedSinceLastInput *int) {
+  go func() {
     for {
       inputVal := <-inputChannel
+      fmt.Println()
       fmt.Println(inputVal)
       if finishedFlag {
         break
       }
-      *secondsElapsedSinceLastInput = 0
+      secondsElapsedSinceLastInput = 0
     }
-  }(&secondsElapsedSinceLastInput)
+  }()
 
   for {
     if finishedFlag {
@@ -44,7 +45,8 @@ func main() {
     }
     <-ticker.C
     secondsElapsedSinceLastInput = secondsElapsedSinceLastInput + 1
-    fmt.Printf("%d", secondsElapsedSinceLastInput)
+    fmt.Printf("\033[2K\r")
+    fmt.Printf("Time elapsed since last sync: %d", secondsElapsedSinceLastInput)
   }
-  fmt.Println("Exiting...")
+  fmt.Println("\nExiting...")
 }
